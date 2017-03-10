@@ -1,10 +1,11 @@
 # emotion_analyse
-about NLP
-* train
+ about NLP
+ * train
 ![image](https://github.com/jinzitian/emotion_analyse/tree/master/image/train.png)
-* see example
+ * see example
 ![image](https://github.com/jinzitian/emotion_analyse/tree/master/image/example.png)
-* emotion analyse
+ * emotion analyse
+
  ```
  For example：python main.py 这家店真的很好，味道棒极了
  ```
