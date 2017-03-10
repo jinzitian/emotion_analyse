@@ -1,7 +1,7 @@
 # emotion_analyse
 about NLP
 # train
-python main.py train
+![image](https://github.com/jinzitian/emotion_analyse/raw/master/screenshots/vim-screenshot.jpg)
 # see example
 python main.py example
 # emotion analyse 
