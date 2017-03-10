@@ -1,8 +1,10 @@
 # emotion_analyse
 it's about NLP ~
  * train
+ 
  ![image](https://github.com/jinzitian/emotion_analyse/tree/master/image/train.png)
  * see example
+ 
  ![image](https://github.com/jinzitian/emotion_analyse/tree/master/image/example.png)
  * emotion analyse
 
