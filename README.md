@@ -1,5 +1,10 @@
 # emotion_analyse
 it's about NLP ~
+
+## version
+tensorflow 1.0
+python 3.5
+
  * train
  
  ![image](https://github.com/jinzitian/emotion_analyse/tree/master/image/train.png)
