@@ -5,4 +5,4 @@ python main.py train
 # see example
 python main.py example
 # emotion analyse 
-example：python main.py 这家店真的很好，味道棒极了
+For example：python main.py 这家店真的很好，味道棒极了
