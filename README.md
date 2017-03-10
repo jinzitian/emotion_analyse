@@ -11,4 +11,4 @@ it's about NLP ~
  ```
  For example：python main.py 这家店真的很好，味道棒极了
  ```
-![image](https://github.com/jinzitian/emotion_analyse/tree/master/image/sentence.png)
+ ![image](https://github.com/jinzitian/emotion_analyse/tree/master/image/sentence.png)
