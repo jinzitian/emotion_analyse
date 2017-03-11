@@ -8,13 +8,22 @@ python 3.5
 ```
  * train
  
- ![image](https://github.com/jinzitian/emotion_analyse/blob/master/images/train.png)
- * see example
- 
- ![image](https://github.com/jinzitian/emotion_analyse/blob/master/images/example.png)
- * emotion analyse
-
  ```
- For example：python main.py 这家店真的很好，味道棒极了
+ The form is ：
+ python main.py train
+ ```
+ ![image](https://github.com/jinzitian/emotion_analyse/blob/master/images/train.png)
+ * see some examples I made for you (if the checkpoints does not have saved models, you need train first) 
+ 
+ ```
+ The form is ：
+ python main.py example
+ ```
+ ![image](https://github.com/jinzitian/emotion_analyse/blob/master/images/example.png)
+ * analyse your own sentences emotion (if the checkpoints does not have saved models, you need train first) 
+ 
+ ```
+ The form is ：
+ python main.py sentence instance_1 instance_2 ... instance_n
  ```
  ![image](https://github.com/jinzitian/emotion_analyse/blob/master/images/sentence.png)
