@@ -138,8 +138,7 @@ def train():
         with tf.Session() as session:
             session.run(tf.global_variables_initializer()) 
          
-            #for j in range(FLAGS.nb_epoch): 
-            for j in range(1):
+            for j in range(FLAGS.nb_epoch): 
                 S = 0
                 n = 0 
                 for i in range(batch_num):
