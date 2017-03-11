@@ -12,9 +12,9 @@ python 3.5
  * see example
  
  ![image](https://github.com/jinzitian/emotion_analyse/blob/master/images/example.png)
- * emotion analyse
-
+ * analyse your own sentences emotion
  ```
- For example：python main.py 这家店真的很好，味道棒极了
+ The form is ：
+ python main.py sentence instance_1 instance_2 ... instance_n
  ```
  ![image](https://github.com/jinzitian/emotion_analyse/blob/master/images/sentence.png)
