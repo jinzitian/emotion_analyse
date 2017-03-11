@@ -105,10 +105,6 @@ def train():
     
     input_test = aa[position:]
     targets_test = bb[position:]
-    
-    #保存测试数据 一会重新restore模型来进行测试
-#    np.save(r'F:\景和千城（工作资料）\情感分析\LSTM\input_test.npy', input_test)
-#    np.save(r'F:\景和千城（工作资料）\情感分析\LSTM\targets_test.npy', targets_test)
 
     input_train = input_train[:,:FLAGS.num_steps]
     #计算总的训练批次数
@@ -118,17 +114,14 @@ def train():
     with tf.Graph().as_default():
         #设置整个graph的初始化方式
         initializer = tf.random_uniform_initializer(-FLAGS.init_scale, FLAGS.init_scale)
-        #训练模型
+
         x_train = tf.placeholder(tf.int32, shape=[FLAGS.batch_size, FLAGS.num_steps])
-        y_train = tf.placeholder(tf.float32, shape=[FLAGS.batch_size, 2])         
-        
+        y_train = tf.placeholder(tf.float32, shape=[FLAGS.batch_size, 2])                
         with tf.variable_scope("Model", reuse=None, initializer=initializer):
             m = LSTMs_Model(len(words_tuple), FLAGS.cell_size, FLAGS.num_layers, FLAGS.keep_prob, x_train, y_train)
         
-        #预测模型
         x_test = input_test[:,:FLAGS.num_steps][:1000]
         test_tag_list = targets_test[:1000]
-
         with tf.variable_scope("Model", reuse=True, initializer=initializer):
             m_test = LSTMs_Model(len(words_tuple), FLAGS.cell_size, FLAGS.num_layers, FLAGS.keep_prob, x_test)
             y_pre_tf = tf.argmax(m_test.predict,1)
@@ -144,8 +137,6 @@ def train():
                 for i in range(batch_num):
                     lr_decay_new = max(FLAGS.lr_decay ** max(i-1, 0.0)*0.01, 0.001)
                     session.run(m.lr_update, feed_dict = {m.new_lr: FLAGS.learning_rate * lr_decay_new})
-
-#                    print("Epoch: %d Learning rate: %.3f" % (i + 1, session.run(m._lr)))
                     _, cost = session.run([m.train_op,m.cost], feed_dict = {x_train: input_train[i*FLAGS.batch_size:(i+1)*FLAGS.batch_size], y_train: targets_train[i*FLAGS.batch_size:(i+1)*FLAGS.batch_size]})
                     S += cost
                     n += 1                    
@@ -161,7 +152,6 @@ def train():
             #保存模型时一定注意保存的路径必须是英文的，中文会报错
 #            save_path = saver.save(session, os.path.join(FLAGS.checkpoints_dir, FLAGS.model_prefix))
             save_path = saver.save(session, FLAGS.checkpoints_dir + '/'+ FLAGS.model_prefix)
-#            save_path = saver.save(session, r'F:\tensorflow_model\LSTM_model.ckpt', global_step = m.global_step)
             print("Model saved in file: ", save_path)
 
 

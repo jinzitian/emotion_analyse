@@ -44,19 +44,14 @@ def predict(sentence):
         initializer = tf.random_uniform_initializer(-FLAGS.init_scale, FLAGS.init_scale)
         with tf.variable_scope("Model", reuse=None, initializer=initializer):
             m = LSTMs_Model(len(words_tuple), FLAGS.cell_size, FLAGS.num_layers, FLAGS.keep_prob, input_data, targets)
-            #整句话判断的情况  
             y_pre_tf = tf.argmax(m.predict,1)
             
             ckpt = tf.train.get_checkpoint_state(FLAGS.checkpoints_dir)
             saver = tf.train.Saver()
-        
             with tf.Session() as session:
-                #初始化所有参数
                 session.run(tf.global_variables_initializer())
                 #恢复模型的参数覆盖初始化中名称相同的全部参数，如果初始化时有新增的参数，新增参数不会受到影响
                 saver.restore(session, ckpt.model_checkpoint_path)
-         
-                #整句话判断的情况
                 y_pre = session.run(y_pre_tf)
     
     emotion = []
