@@ -8,9 +8,17 @@ python 3.5
 ```
  * train
  
+ ```
+ The form is ：
+ python main.py train
+ ```
  ![image](https://github.com/jinzitian/emotion_analyse/blob/master/images/train.png)
- * see example
+ * see some examples I made for you 
  
+ ```
+ The form is ：
+ python main.py example
+ ```
  ![image](https://github.com/jinzitian/emotion_analyse/blob/master/images/example.png)
  * analyse your own sentences emotion
  
