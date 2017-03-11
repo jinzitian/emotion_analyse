@@ -37,39 +37,6 @@ FLAGS = tf.app.flags.FLAGS
 
 
 
-def get_words2id_data():
-
-    data = pd.read_csv(r'./data/content_1.csv')
-    data['sign'] = data['content_stars'].apply(lambda x: [0,1] if x[7:] == '40' or x[7:] == '50' else [1,0])
-    data['x'] = data['user_content'].apply(lambda x: jieba.cut(x))
-
-    with open(r'./data/标点集.txt','r',encoding = 'utf-8') as f:
-        characters = f.readlines()
-    character_list = [i.split('\n')[0] for i in characters]
-    character_dict = {i:0 for i in character_list}
-#    stop_words_dict = {}
-    data['words'] = data['x'].apply(lambda x: [k for k in x if k not in character_dict])
-#    words = [i for i,j in temp_3]
-    
-    allwords = []
-    for i in data['words']:
-        allwords.extend(i)
-    #先将vocabulary_size设置一个很大的值，验证vocabulary_size的大小，然后再调整全局的vocabulary_size
-
-    dictionary, words_tuple = build_dataset(allwords)
-    
-    data['word_id'] = data['words'].apply(lambda x: [dictionary.get(j,0) for j in x])
-    
-    max_length = 0
-    for i in data['word_id']:
-        if len(i) > max_length:
-            max_length = len(i)
-            
-    data['word_id_padding'] = data['word_id'].apply(lambda x: (x + [0]*(max_length - len(x))) if len(x) < max_length else x)
-        
-    return np.array(data['word_id_padding'].tolist()), np.array(data['sign'].tolist()), dictionary, words_tuple, np.array(data['content_stars'].tolist())
-
-
 def get_words2id_data_2():
   
     a = pd.read_excel(r'./data/neg.xls',header=None)
@@ -107,7 +74,6 @@ def get_words2id_data_2():
 
 def train():
 
-#    aa, bb, word2id_dictionary, id2word_dictionary, ss = get_words2id_data()
     aa, bb, word2id_dictionary, words_tuple = get_words2id_data_2()
     
     #用pickle保存word2id字典，为了后续预测数据时转换使用
@@ -172,7 +138,8 @@ def train():
         with tf.Session() as session:
             session.run(tf.global_variables_initializer()) 
          
-            for j in range(FLAGS.nb_epoch): 
+            #for j in range(FLAGS.nb_epoch): 
+            for j in range(1):
                 S = 0
                 n = 0 
                 for i in range(batch_num):

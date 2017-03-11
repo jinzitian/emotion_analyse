@@ -14,7 +14,9 @@ from model.CNN_LSTM import LSTMs_Model
 from train.train import FLAGS
 
 def predict(sentence):
-    
+    '''
+    parameter sentence is a list of sentences
+    '''
     picklefile = open(r'./dict/word2id_dictionary.pkl', 'rb')
     word2id_dictionary = pickle.load(picklefile)
     picklefile.close()    
@@ -24,16 +26,16 @@ def predict(sentence):
     picklefile.close()    
     
     jieba.add_word('难喝')
-    words_list = jieba.cut(sentence)
+    words_list = map(jieba.cut, sentence)
     with open(r'./data/标点集.txt','r',encoding = 'utf-8') as f:
         signs = f.readlines()
     signs_list = [i.split('\n')[0] for i in signs]
     signs_dict = {i:0 for i in signs_list}
     
-    words_list_without_signs = [i for i in words_list if i not in signs_dict]
-    id_list = [word2id_dictionary.get(i,0) for i in words_list_without_signs]
-    predict_id_list = id_list + [0]*(FLAGS.num_steps-len(id_list)) if len(id_list) < FLAGS.num_steps else id_list[: FLAGS.num_steps]
-    predict_id_list = np.array([predict_id_list])    
+    words_list_without_signs = map(lambda x:[i for i in x if i not in signs_dict], words_list)
+    id_list = map(lambda x:[word2id_dictionary.get(i,0) for i in x], words_list_without_signs)
+    predict_id_list = list(map(lambda x: x + [0]*(FLAGS.num_steps-len(x)) if len(x) < FLAGS.num_steps else x[: FLAGS.num_steps], id_list))
+    predict_id_list = np.array(predict_id_list)
     
     with tf.Graph().as_default():
         #设置整个graph的初始化方式
@@ -55,10 +57,13 @@ def predict(sentence):
                 saver.restore(session, ckpt.model_checkpoint_path)
          
                 #整句话判断的情况
-                y_pre = session.run(y_pre_tf)              
-                emotion = '正面情感' if y_pre == 1 else '负面情感'
+                y_pre = session.run(y_pre_tf)
+    
+    emotion = []
+    for i in range(len(sentence)):
+        emotion.append((sentence[i], '正面情感' if y_pre[i] == 1 else '负面情感'))
                 
-                return emotion
+    return emotion
 
 
 

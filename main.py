@@ -7,6 +7,7 @@ Created on Fri Mar 10 11:47:19 2017
 
 import sys
 import pandas as pd
+import numpy as np
 
 from train.train import train
 from predict.predict import predict
@@ -20,19 +21,23 @@ def get_data():
     
     
 def main(args):
-    if len(args) != 2:
-        print('please like this :python main.py train/example/sentence')
+
+    if args[1] == 'train':
+        train()
+    elif args[1] == 'example':
+        data = get_data()
+        sentence = [data['user_content'].iloc[np.random.randint(len(data))]]
+        for s, e in predict(sentence):
+            print(s, '[' + e + ']')
+    elif args[1] == 'sentence':
+        sentence = args[2:]
+        for s,e in predict(sentence):
+            print(s, '[' + e + ']')
     else:
-        if args[1] == 'train':
-            train()
-        elif args[1] == 'example':
-            data = get_data()
-            sentence = data['user_content'].iloc[1]
-            print(sentence, '   ', predict(sentence))
-        else:
-            sentence = args[1]
-            print(sentence, '   ', predict(sentence))
-            
+        print('you can try like these:')
+        print('  1、python main.py train')
+        print('  2、python main.py example')
+        print('  3、python main.py sentence instance1 instance2 ... instanceN')
             
 if __name__ == '__main__':
     
