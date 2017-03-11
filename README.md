@@ -26,4 +26,4 @@ python 3.5
  The form is ：
  python main.py sentence instance_1 instance_2 ... instance_n
  ```
- ![image](https://github.com/jinzitian/emotion_analyse/blob/master/images/sentence.png)
+ ![image](https://github.com/jinzitian/emotion_analyse/blob/master/images/sentences.png)
