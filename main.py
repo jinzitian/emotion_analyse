@@ -7,6 +7,7 @@ Created on Fri Mar 10 11:47:19 2017
 
 import sys
 import numpy as np
+import pandas as pd
 
 from train.train import train
 from predict.predict import predict
