@@ -32,6 +32,7 @@ def main(args):
                 print(s, '[' + e + ']')
         except Exception as e:
             print('you need train first')
+            print('please try: python main.py train')
             
     elif args[1] == 'sentence':
         sentence = args[2:]
@@ -40,6 +41,7 @@ def main(args):
                 print(s, '[' + e + ']')
         except Exception as e:
             print('you need train first')
+            print('please try: python main.py train')
     else:
         print('you can try like these:')
         print('  1、python main.py train')
