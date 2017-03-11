@@ -6,7 +6,6 @@ Created on Fri Mar 10 11:47:19 2017
 """
 
 import sys
-import pandas as pd
 import numpy as np
 
 from train.train import train
@@ -51,7 +50,7 @@ def main(args):
 if __name__ == '__main__':
     
     main(sys.argv)
-    
+
     
     
     
