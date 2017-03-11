@@ -13,14 +13,14 @@ python 3.5
  python main.py train
  ```
  ![image](https://github.com/jinzitian/emotion_analyse/blob/master/images/train.png)
- * see some examples I made for you 
+ * see some examples I made for you (if the checkpoints does not have saved models,you need train first) 
  
  ```
  The form is ：
  python main.py example
  ```
  ![image](https://github.com/jinzitian/emotion_analyse/blob/master/images/example.png)
- * analyse your own sentences emotion
+ * analyse your own sentences emotion (if the checkpoints does not have saved models,you need train first) 
  
  ```
  The form is ：
