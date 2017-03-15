@@ -12,18 +12,18 @@ python 3.5
  The form is ：
  python main.py train
  ```
- ![image](https://github.com/jinzitian/emotion_analyse/blob/master/images/train.png)
+ ![image](https://github.com/jinzitian/emotion_analyse/blob/master/images/train_lstm.png)
  * see some examples I made for you (if the checkpoints does not have saved models, you need train first) 
  
  ```
  The form is ：
  python main.py example
  ```
- ![image](https://github.com/jinzitian/emotion_analyse/blob/master/images/example.png)
+ ![image](https://github.com/jinzitian/emotion_analyse/blob/master/images/example_lstm.png)
  * analyse your own sentences emotion (if the checkpoints does not have saved models, you need train first) 
  
  ```
  The form is ：
  python main.py sentence instance_1 instance_2 ... instance_n
  ```
- ![image](https://github.com/jinzitian/emotion_analyse/blob/master/images/sentences.png)
+ ![image](https://github.com/jinzitian/emotion_analyse/blob/master/images/sentences_lstm.png)
