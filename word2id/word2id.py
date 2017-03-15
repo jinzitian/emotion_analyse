@@ -14,7 +14,7 @@ def build_dataset(all_words):
     count_dict = collections.Counter(all_words)
     count_pairs = sorted(count_dict.items(), key = lambda x: -x[1])
     words, _ = zip(*count_pairs)
-    words = ('other',) + words
+    words = (' ',) + words
     #这样构建的words的id和单词的位子刚好匹配，也就可以通过id来找到单词
     word2id = dict(zip(words,range(len(words))))
     

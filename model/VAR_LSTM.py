@@ -17,13 +17,14 @@ class LSTMs_Model(object):
     def __init__(self, vocabulary_size, cell_size, num_layers, keep_prob, input_data, targets = None):
         
         if isinstance(input_data, tf.Tensor):            
-            batch_size, num_steps = input_data.shape.as_list()
-            print('train')
-            print(batch_size, num_steps)
+            batch_size = input_data.shape[0].value
+            if targets != None:
+                print('train, batch_size is %s'%batch_size)
+            else:
+                print('predict, batch_size is %s'%batch_size)
         elif isinstance(input_data, np.ndarray):
-            batch_size, num_steps = input_data.shape
-            print('predict')
-            print(batch_size, num_steps)
+            batch_size = input_data.shape[0]
+            print('predict, batch_size is %s'%batch_size)
         else:
             print('error')
             return
@@ -46,16 +47,15 @@ class LSTMs_Model(object):
             self.embedding = embedding
             inputs = tf.nn.embedding_lookup(self.embedding, input_data)
 
-        self.conv_height = 5
-        self.conv_width = 5
-        W_conv1 = tf.get_variable("W_conv1", [self.conv_height, self.conv_width,1,1], dtype=tf.float32)
-        b_conv1 = tf.get_variable("b_conv1", [1], dtype=tf.float32)
-        x_image = tf.reshape(inputs, [-1, num_steps, self.vector_size, 1])
-        inputs = tf.nn.relu(tf.nn.conv2d(x_image, W_conv1, strides=[1, 1, 1, 1], padding='VALID') + b_conv1)        
-        num_steps = num_steps - self.conv_height + 1
-        self.input_vector_size = self.vector_size - self.conv_width + 1
-        inputs = tf.reshape(inputs, [-1, num_steps, self.input_vector_size])          
-
+#        self.conv_height = 5
+#        self.conv_width = 5
+#        W_conv1 = tf.get_variable("W_conv1", [self.conv_height, self.conv_width,1,1], dtype=tf.float32)
+#        b_conv1 = tf.get_variable("b_conv1", [1], dtype=tf.float32)
+#        x_image = tf.reshape(inputs, [batch_size, -1, self.vector_size, 1])
+#        inputs = tf.nn.relu(tf.nn.conv2d(x_image, W_conv1, strides=[1, 1, 1, 1], padding='VALID') + b_conv1)        
+#        self.input_vector_size = self.vector_size - self.conv_width + 1
+#        inputs = tf.reshape(inputs, [batch_size, -1, self.input_vector_size])  
+        
         if self.keep_prob < 1:
             inputs = tf.nn.dropout(inputs, self.keep_prob)
         outputs, last_state = tf.nn.dynamic_rnn(cell, inputs, initial_state=initial_state)
@@ -73,7 +73,7 @@ class LSTMs_Model(object):
             #用内置函数定义交叉熵，得到每条数据的损失列表
             loss = tf.nn.softmax_cross_entropy_with_logits(labels=targets, logits=tf.matmul(output, V) + V_b)
             average_loss = tf.reduce_mean(loss)
-            #手动定义交叉熵定义损失函数,如果出现log(0)则会出问题nan
+            #手动定义交叉熵定义损失函数,如果为log(0)会出现nan
 #            loss = -targets*tf.log(softmax_output)
 #            average_loss = tf.reduce_mean(tf.reduce_sum(loss, axis = 1))
 

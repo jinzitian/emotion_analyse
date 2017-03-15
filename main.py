@@ -9,8 +9,10 @@ import sys
 import numpy as np
 import pandas as pd
 
-from train.train import train
-from predict.predict import predict
+from train.lstm_train import lstm_train
+from predict.lstm_predict import lstm_predict
+from train.cnn_lstm_train import cnn_lstm_train
+from predict.cnn_lstm_predict import cnn_lstm_predict
 
 def get_data():
     data1 = pd.read_excel(r'./data/pos.xls',header =None)
@@ -23,30 +25,58 @@ def get_data():
 def main(args):
     
     if args[1] == 'train':
-        train()
+        if args[2] == 'lstm':
+            lstm_train()
+        elif args[2] == 'cnn_lstm':
+            cnn_lstm_train()
+        else:
+            print('please try: python main.py train lstm/cnn_lstm')
+			
     elif args[1] == 'example':
         data = get_data()
         sentence = [data['user_content'].iloc[np.random.randint(len(data))]]
-        try:
-            for s, e in predict(sentence):
-                print(s, '[' + e + ']')
-        except Exception as e:
-            print('you need train first')
-            print('please try: python main.py train')
+        if args[2] == 'lstm':
+            try:
+                for s, e in lstm_predict(sentence):
+                    print(s, '[' + e + ']')
+            except Exception as e:
+                print('you need train first')
+                print('please try: python main.py train lstm')
+        elif args[2] == 'cnn_lstm':
+            try:
+                for s, e in cnn_lstm_predict(sentence):
+                   print(s, '[' + e + ']')
+            except Exception as e:
+                print('you need train first')
+                print('please try: python main.py train cnn_lstm')
+        else:
+            print('please try: python main.py example lstm/cnn_lstm')
             
     elif args[1] == 'sentence':
-        sentence = args[2:]
-        try:
-            for s,e in predict(sentence):
-                print(s, '[' + e + ']')
-        except Exception as e:
-            print('you need train first')
-            print('please try: python main.py train')
+        if args[2] == 'lstm':
+            sentence = args[3:]
+            try:
+                for s,e in lstm_predict(sentence):
+                    print(s, '[' + e + ']')
+            except Exception as e:
+                print('you need train first')
+                print('please try: python main.py train lstm')				
+        elif args[2] == 'cnn_lstm':
+            sentence = args[3:]
+            try:
+                for s,e in cnn_lstm_predict(sentence):
+                    print(s, '[' + e + ']')
+            except Exception as e:
+                print('you need train first')
+                print('please try: python main.py train cnn_lstm')
+        else:
+            print('please try: python main.py sentence lstm/cnn_lstm instance1 instance2 ... instanceN')
+		
     else:
         print('you can try like these:')
-        print('  1、python main.py train')
-        print('  2、python main.py example')
-        print('  3、python main.py sentence instance1 instance2 ... instanceN')
+        print('  1、python main.py train lstm/cnn_lstm')
+        print('  2、python main.py example lstm/cnn_lstm')
+        print('  3、python main.py sentence lstm/cnn_lstm instance1 instance2 ... instanceN')
             
 if __name__ == '__main__':
     
