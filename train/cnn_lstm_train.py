@@ -141,14 +141,14 @@ def cnn_lstm_train():
                     S += cost
                     n += 1                    
                     if i%100 == 0 and i > 0:
-                        print("Epoch: %d batch_num: %d loss: %.3f" % (j, i, S/n))
+                        y_pre = session.run(y_pre_tf)
+                        y_tag = test_tag_list.argmax(axis = 1)
+                        accuracy = np.mean(y_pre == y_tag)
+                        print("Epoch: %d batch_num: %d loss: %.3f, accuracy = %s" % (j, i, S/n, accuracy))
                         S = 0
                         n = 0
 
-            y_pre = session.run(y_pre_tf)
-            y_tag = np.array(list(map(np.argmax, test_tag_list)))
-            accuracy = np.mean(y_pre == y_tag)
-            print('accuracy : ', accuracy)
+            
             #保存模型时一定注意保存的路径必须是英文的，中文会报错
 #            save_path = saver.save(session, os.path.join(FLAGS.cnn_lstm_checkpoints_dir, FLAGS.cnn_lstm_model_prefix))
             save_path = saver.save(session, FLAGS.cnn_lstm_checkpoints_dir + '/'+ FLAGS.cnn_lstm_model_prefix)

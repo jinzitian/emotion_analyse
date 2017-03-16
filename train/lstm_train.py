@@ -20,14 +20,14 @@ from model.VAR_LSTM import LSTMs_Model
 #tf.app.flags.DEFINE_integer('vocabulary_size', 51000, 'vocabulary_size')
 #lstm_cell_size = 60 #一般取词汇量的 1/400 或 1/550
 tf.app.flags.DEFINE_integer('lstm_cell_size', 128, 'lstm_cell_size')
-tf.app.flags.DEFINE_integer('lstm_num_layers', 1, 'lstm_num_layers')
+tf.app.flags.DEFINE_integer('lstm_num_layers', 2, 'lstm_num_layers')
 #样本量由小到大一些的话通常取3种值0.8/0.5/0.35
 tf.app.flags.DEFINE_float('lstm_keep_prob', 0.8, 'lstm_keep_prob')
 tf.app.flags.DEFINE_float('lstm_init_scale', 0.1, 'lstm_init_scale')
 tf.app.flags.DEFINE_integer('lstm_batch_size', 16, 'lstm_batch_size')
 tf.app.flags.DEFINE_float('lstm_lr_decay', 0.9, 'lstm_lr_decay')
 tf.app.flags.DEFINE_float('lstm_learning_rate', 1.0, 'lstm_learning_rate')
-tf.app.flags.DEFINE_integer('lstm_nb_epoch', 25, 'lstm_nb_epoch')
+tf.app.flags.DEFINE_integer('lstm_nb_epoch', 30, 'lstm_nb_epoch')
 tf.app.flags.DEFINE_string('lstm_checkpoints_dir', './checkpoints_var_lstm', 'checkpoints save path.')
 tf.app.flags.DEFINE_string('lstm_model_prefix', 'LSTM_model', 'model save filename.')
 
@@ -135,19 +135,17 @@ def lstm_train():
                     S += cost
                     n += 1                    
                     if i%100 == 0 and i > 0:
-                        print("Epoch: %d batch_num: %d loss: %.3f" % (j, i, S/n))
+                        s = np.array([])
+                        for k in range(len(test_x_batches)):
+                            y_pre = session.run(y_pre_tf,feed_dict = {x_test: test_x_batches[k]})
+                            y_tag = test_y_batches[k].argmax(axis = 1)       
+                            a = (y_pre == y_tag)
+                            s = np.concatenate((s,a))
+                        accuracy = np.mean(s)
+                        print("Epoch: %d batch_num: %d loss: %.3f, accuracy = %s" % (j, i, S/n, accuracy))
                         S = 0
                         n = 0
             
-            
-            s = np.array([])
-            for i in range(len(test_x_batches)):
-                y_pre = session.run(y_pre_tf,feed_dict = {x_test: test_x_batches[i]})
-                y_tag = test_y_batches[i].argmax(axis = 1)       
-                a = (y_pre == y_tag)
-                s = np.concatenate((s,a))
-            accuracy = np.mean(s)
-            print('accuracy : ', accuracy)
             save_path = saver.save(session, FLAGS.lstm_checkpoints_dir + '/'+ FLAGS.lstm_model_prefix)
             print("Model saved in file: ", save_path)
 
