@@ -44,12 +44,11 @@ def get_batch_words2id_data(lstm_batch_size):
     character_dict = {i:0 for i in character_list}
     
     a = pd.read_excel('./data/neg.xls',header=None)
-    a['sign'] = 1
+    a['sign'] = 0
     b = pd.read_excel('./data/pos.xls',header=None)
-    b['sign'] = 0
+    b['sign'] = 1
     c = pd.concat([a,b])
     d = c.iloc[np.random.permutation(len(c))] 
-    d['tags'] = d['sign'].apply(lambda x:[0,1] if x == 1 else [1,0])
     d['tags'] = list(map(lambda x:[0,1] if x == 1 else [1,0],d['sign']))
     d['words'] = d[0].apply(lambda i:list(jieba.cut(i)))    
     d['non_stop_words'] = d['words'].apply(lambda x:[k for k in x if k not in character_dict])
