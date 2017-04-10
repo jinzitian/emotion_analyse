@@ -35,7 +35,7 @@ class LSTMs_Model(object):
         self.keep_prob = keep_prob
         
         lstm_cell = tf.contrib.rnn.BasicLSTMCell(cell_size, forget_bias=0.0, state_is_tuple=True)
-        if self.keep_prob < 1:
+        if self.keep_prob < 1 and targets != None:
             lstm_cell = tf.contrib.rnn.DropoutWrapper(lstm_cell, output_keep_prob=keep_prob)
         cell = tf.contrib.rnn.MultiRNNCell([lstm_cell] * num_layers, state_is_tuple=True)
         self.cell = cell
@@ -56,13 +56,13 @@ class LSTMs_Model(object):
 #        self.input_vector_size = self.vector_size - self.conv_width + 1
 #        inputs = tf.reshape(inputs, [batch_size, -1, self.input_vector_size])  
         
-        if self.keep_prob < 1:
+        if self.keep_prob < 1 and targets != None:
             inputs = tf.nn.dropout(inputs, self.keep_prob)
         outputs, last_state = tf.nn.dynamic_rnn(cell, inputs, initial_state=initial_state)
         output = outputs[:,-1,:]
 
         
-        if self.keep_prob < 1:
+        if self.keep_prob < 1 and targets != None:
             output = tf.nn.dropout(output, self.keep_prob)
         V = tf.get_variable("V", [self.cell_size, 2], dtype=tf.float32)
         V_b = tf.get_variable("V_b", [2], dtype=tf.float32)
