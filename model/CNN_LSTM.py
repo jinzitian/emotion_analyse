@@ -33,12 +33,20 @@ class LSTMs_Model(object):
         self.num_layers = num_layers
         self.keep_prob = keep_prob
         
-        lstm_cell = tf.contrib.rnn.BasicLSTMCell(cell_size, forget_bias=0.0, state_is_tuple=True)
+        def single_cell():
+            return tf.contrib.rnn.BasicLSTMCell(cell_size, forget_bias=0.0, state_is_tuple=True)
+        
+        lstm_cell = single_cell
+        
         if self.keep_prob < 1 and targets != None:
-            lstm_cell = tf.contrib.rnn.DropoutWrapper(lstm_cell, output_keep_prob=keep_prob)
-        cell = tf.contrib.rnn.MultiRNNCell([lstm_cell] * num_layers, state_is_tuple=True)
+            def dropout_single_cell():
+                return tf.contrib.rnn.DropoutWrapper(single_cell(), output_keep_prob=keep_prob)
+            lstm_cell = dropout_single_cell
+            
+        #创建多层lstm需要注意，每层的lstm_cell都是独立的对象，需要单独创建
+        cell = tf.contrib.rnn.MultiRNNCell([lstm_cell() for i in range(num_layers)], state_is_tuple=True)
         self.cell = cell
-        initial_state = self.cell.zero_state(batch_size, tf.float32)        
+        initial_state = self.cell.zero_state(batch_size, tf.float32)            
         
         self.vector_size = cell_size * 2
         with tf.device("/cpu:0"):

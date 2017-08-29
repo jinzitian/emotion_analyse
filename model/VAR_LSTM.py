@@ -34,18 +34,31 @@ class LSTMs_Model(object):
         self.num_layers = num_layers
         self.keep_prob = keep_prob
         
-        lstm_cell = tf.contrib.rnn.BasicLSTMCell(cell_size, forget_bias=0.0, state_is_tuple=True)
+        def single_cell():
+            return tf.contrib.rnn.BasicLSTMCell(cell_size, forget_bias=0.0, state_is_tuple=True)
+        
+        lstm_cell = single_cell
+        
         if self.keep_prob < 1 and targets != None:
-            lstm_cell = tf.contrib.rnn.DropoutWrapper(lstm_cell, output_keep_prob=keep_prob)
-        cell = tf.contrib.rnn.MultiRNNCell([lstm_cell] * num_layers, state_is_tuple=True)
+            def dropout_single_cell():
+                return tf.contrib.rnn.DropoutWrapper(single_cell(), output_keep_prob=keep_prob)
+            lstm_cell = dropout_single_cell
+            
+        #创建多层lstm需要注意，每层的lstm_cell都是独立的对象，需要单独创建
+        cell = tf.contrib.rnn.MultiRNNCell([lstm_cell() for i in range(num_layers)], state_is_tuple=True)
         self.cell = cell
         initial_state = self.cell.zero_state(batch_size, tf.float32)        
         
         self.vector_size = cell_size * 2
+        
         with tf.device("/cpu:0"):
             embedding = tf.get_variable("embedding", shape = [vocabulary_size, self.vector_size], dtype=tf.float32)     
             self.embedding = embedding
             inputs = tf.nn.embedding_lookup(self.embedding, input_data)
+        
+        #词向量先转换为lstm的cell长度，输入lstm
+        #vec_lstm_weight = tf.get_variable("vec_lstm_weight", shape = [self.vector_size, self.cell_size], dtype=tf.float32) 
+        #inputs = tf.reshape(tf.matmul(tf.reshape(inputs,[-1,self.vector_size]), vec_lstm_weight),[batch_size,-1,self.cell_size])
 
 #        self.conv_height = 5
 #        self.conv_width = 5
@@ -58,9 +71,10 @@ class LSTMs_Model(object):
         
         if self.keep_prob < 1 and targets != None:
             inputs = tf.nn.dropout(inputs, self.keep_prob)
+    
         outputs, last_state = tf.nn.dynamic_rnn(cell, inputs, initial_state=initial_state)
         output = outputs[:,-1,:]
-
+        
         
         if self.keep_prob < 1 and targets != None:
             output = tf.nn.dropout(output, self.keep_prob)
