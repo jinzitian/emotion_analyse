@@ -72,7 +72,7 @@ def get_words2id_data_2():
     return np.array(word_id_padding), np.array(tag), dictionary, words_tuple
 
 
-def cnn_lstm_train():
+def cnn_lstm_train(update = False):
 
     aa, bb, word2id_dictionary, words_tuple = get_words2id_data_2()
     
@@ -126,11 +126,17 @@ def cnn_lstm_train():
             m_test = LSTMs_Model(len(words_tuple), FLAGS.cnn_lstm_cell_size, FLAGS.cnn_lstm_num_layers, FLAGS.cnn_lstm_keep_prob, x_test)
             y_pre_tf = tf.argmax(m_test.predict,1)
 
+        if update:
+            ckpt = tf.train.get_checkpoint_state(FLAGS.cnn_lstm_checkpoints_dir)
+
         saver = tf.train.Saver()
             
         with tf.Session() as session:
             session.run(tf.global_variables_initializer()) 
-         
+            #再训练更新参数则还原之前的模型，继续训练，当然训练数据要变为新的数据
+            if update:
+                saver.restore(session, ckpt.model_checkpoint_path)
+            
             for j in range(FLAGS.cnn_lstm_nb_epoch): 
                 S = 0
                 n = 0 

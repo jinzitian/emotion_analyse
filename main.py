@@ -32,6 +32,14 @@ def main(args):
         else:
             print('please try: python main.py train lstm/cnn_lstm')
 			
+    elif args[1] == 'update':
+        if args[2] == 'lstm':
+            lstm_train(True)
+        elif args[2] == 'cnn_lstm':
+            cnn_lstm_train(True)
+        else:
+            print('please try: python main.py update lstm/cnn_lstm')
+			
     elif args[1] == 'example':
         data = get_data()
         sentence = [data['user_content'].iloc[np.random.randint(len(data))]]
@@ -75,8 +83,9 @@ def main(args):
     else:
         print('you can try like these:')
         print('  1、python main.py train lstm/cnn_lstm')
-        print('  2、python main.py example lstm/cnn_lstm')
-        print('  3、python main.py sentence lstm/cnn_lstm instance1 instance2 ... instanceN')
+        print('  2、python main.py update lstm/cnn_lstm')
+        print('  3、python main.py example lstm/cnn_lstm')
+        print('  4、python main.py sentence lstm/cnn_lstm instance1 instance2 ... instanceN')
             
 if __name__ == '__main__':
     

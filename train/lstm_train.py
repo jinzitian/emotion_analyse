@@ -92,7 +92,7 @@ def get_batch_words2id_data(lstm_batch_size):
 
 
 
-def lstm_train():
+def lstm_train(update = False):
 
     train_x_batches, train_y_batches, test_x_batches, test_y_batches, word2id_dictionary, words_tuple = get_batch_words2id_data(FLAGS.lstm_batch_size)
     print(len(train_x_batches))    
@@ -118,11 +118,17 @@ def lstm_train():
         with tf.variable_scope("Model", reuse=True, initializer=initializer):            
             m_test = LSTMs_Model(len(words_tuple), FLAGS.lstm_cell_size, FLAGS.lstm_num_layers, FLAGS.lstm_keep_prob, x_test)
             y_pre_tf = tf.argmax(m_test.predict,1)
-
+            
+        if update:
+            ckpt = tf.train.get_checkpoint_state(FLAGS.lstm_checkpoints_dir)
+        
         saver = tf.train.Saver()
         with tf.Session() as session:
             session.run(tf.global_variables_initializer()) 
-            
+            #再训练更新参数则还原之前的模型，继续训练，当然训练数据要变为新的数据
+            if update:
+                saver.restore(session, ckpt.model_checkpoint_path)
+
             for j in range(FLAGS.lstm_nb_epoch):
 #            for j in range(1):
                 S = 0
@@ -144,7 +150,8 @@ def lstm_train():
                         print("Epoch: %d batch_num: %d loss: %.3f, accuracy = %s" % (j, i, S/n, accuracy))
                         S = 0
                         n = 0
-            
+                        
+
             save_path = saver.save(session, FLAGS.lstm_checkpoints_dir + '/'+ FLAGS.lstm_model_prefix)
             print("Model saved in file: ", save_path)
 
