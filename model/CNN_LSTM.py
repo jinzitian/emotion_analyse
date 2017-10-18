@@ -38,7 +38,7 @@ class LSTMs_Model(object):
         
         lstm_cell = single_cell
         
-        if self.keep_prob < 1 and targets != None:
+        if self.keep_prob < 1 and targets is not None:
             def dropout_single_cell():
                 return tf.contrib.rnn.DropoutWrapper(single_cell(), output_keep_prob=keep_prob)
             lstm_cell = dropout_single_cell
@@ -64,13 +64,13 @@ class LSTMs_Model(object):
         self.input_vector_size = self.vector_size - self.conv_width + 1
         inputs = tf.reshape(inputs, [-1, num_steps, self.input_vector_size])          
 
-        if self.keep_prob < 1 and targets != None:
+        if self.keep_prob < 1 and targets is not None:
             inputs = tf.nn.dropout(inputs, self.keep_prob)
         outputs, last_state = tf.nn.dynamic_rnn(cell, inputs, initial_state=initial_state)
         output = outputs[:,-1,:]
 
         
-        if self.keep_prob < 1 and targets != None:
+        if self.keep_prob < 1 and targets is not None:
             output = tf.nn.dropout(output, self.keep_prob)
         V = tf.get_variable("V", [self.cell_size, 2], dtype=tf.float32)
         V_b = tf.get_variable("V_b", [2], dtype=tf.float32)

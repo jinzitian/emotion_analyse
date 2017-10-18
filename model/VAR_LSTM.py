@@ -18,7 +18,7 @@ class LSTMs_Model(object):
         
         if isinstance(input_data, tf.Tensor):            
             batch_size = input_data.shape[0].value
-            if targets != None:
+            if targets is not None:
                 print('train, batch_size is %s'%batch_size)
             else:
                 print('predict, batch_size is %s'%batch_size)
@@ -39,7 +39,7 @@ class LSTMs_Model(object):
         
         lstm_cell = single_cell
         
-        if self.keep_prob < 1 and targets != None:
+        if self.keep_prob < 1 and targets is not None:
             def dropout_single_cell():
                 return tf.contrib.rnn.DropoutWrapper(single_cell(), output_keep_prob=keep_prob)
             lstm_cell = dropout_single_cell
@@ -69,14 +69,14 @@ class LSTMs_Model(object):
 #        self.input_vector_size = self.vector_size - self.conv_width + 1
 #        inputs = tf.reshape(inputs, [batch_size, -1, self.input_vector_size])  
         
-        if self.keep_prob < 1 and targets != None:
+        if self.keep_prob < 1 and targets is not None:
             inputs = tf.nn.dropout(inputs, self.keep_prob)
     
         outputs, last_state = tf.nn.dynamic_rnn(cell, inputs, initial_state=initial_state)
         output = outputs[:,-1,:]
         
         
-        if self.keep_prob < 1 and targets != None:
+        if self.keep_prob < 1 and targets is not None:
             output = tf.nn.dropout(output, self.keep_prob)
         V = tf.get_variable("V", [self.cell_size, 2], dtype=tf.float32)
         V_b = tf.get_variable("V_b", [2], dtype=tf.float32)
